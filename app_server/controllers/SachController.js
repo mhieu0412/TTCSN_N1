@@ -37,9 +37,16 @@ module.exports = {
         }
     },
     update: async (req, res) => {
-        let {bookName} = req.body;
-        let bookId = req.params.bookId;
-        let sql = 'UPDATE Books SET BookName = @bookName WHERE BookId = @bookId'
+        let {TenSach, Website, GhiChu, NamXB, TenNXB, DiaChi, Email, NguoiDaiDien, TenTheLoai} = req.body;
+        let MaSach = req.params.MaSach;
+        let sql = `UPDATE TenSach, Website, GhiChu, NamXB, TenNXB, DiaChi, Email, NguoiDaiDien, TenTheLoai
+                    FROM Sach 
+                    INNER JOIN TacGia ON Sach.MaTacGia = TacGia.MaTacGia
+                    INNER JOIN TheLoai ON Sach.MaTheLoai = TheLoai.MaTheLoai
+                    INNER JOIN NhaXuatBan ON Sach.MaNXB = NhaXuatBan.MaNXB
+                    SET TenSach = @TenSach, Website = @Website, GhiChu = @GhiChu, NamXB = @NamXB,
+                    TenNXB = @TenNXB, DiaChi =@DiaChi, Email = @Email, NguoiDaiDien = @NguoiDaiDien, TenTheLoai = @TenTheLoai
+                    WHERE MaSach = @MaSach`
         try {
             const pool = await mssql.connect(config);
             const result = await pool.request().query(sql);
@@ -55,8 +62,8 @@ module.exports = {
         }
     },
     store: async (req, res) => {
-        let {bookId, bookName} = req.body;
-        let sql = 'INSERT INTO Books VALUES (@bookId, @bookName); SELECT SCOPE_IDENTITY() AS BookId';
+        let {TenSach, Website, GhiChu, NamXB, TenNXB, DiaChi, Email, NguoiDaiDien, TenTheLoai} = req.body;
+        let sql = 'INSERT INTO Sach VALUES (@bookId, @bookName); SELECT SCOPE_IDENTITY() AS BookId';
         try {
             const pool = await mssql.connect(config);
             const result = await pool.request().query(sql);
@@ -83,5 +90,21 @@ module.exports = {
             console.error(err);
             res.status(500).send('Server error');
         }
+    },
+    getCode: async (req, res) => {
+        let sql = 'SELECT MAX(MaSach) From Sach'
+        try {
+            const pool = await mssql.connect(config);
+            const result = await pool.request().query(sql);
+            if (result.recordset.length > 0) {
+                res.send(result.recordset[0]);
+            } else {
+                res.status(404).send('DB has not data');
+            }
+          } 
+        catch (err) {
+            console.error(err);
+            res.status(500).send('Server error');
+          }
     }
 }

@@ -5,8 +5,9 @@ const {config} = require('../config/dbconfig');
 module.exports = {
     store: async (req, res) => {
         const { MaTacGia, TenTacGia, Website, GhiChu } = req.body;
-        await poolConnect;
+        
         try {
+          const pool = await mssql.connect(config);
           const result = await pool.request()
             .input('MaTacGia', mssql.NChar, MaTacGia)
             .input('TenTacGia', mssql.NVarChar, TenTacGia)
@@ -23,8 +24,9 @@ module.exports = {
         }
     },
     get: async (req, res) => {
-        await poolConnect;
+        
         try {
+          const pool = await mssql.connect(config);
           const result = await pool.request()
             .query('SELECT * FROM TacGia');
           res.json(result.recordset);
@@ -36,8 +38,9 @@ module.exports = {
     update: async (req, res) => {
         const { MaTacGia } = req.params;
         const { TenTacGia, Website, GhiChu } = req.body;
-        await poolConnect;
+        
         try {
+          const pool = await mssql.connect(config);
           const result = await pool.request()
             .input('MaTacGia', sql.NChar, MaTacGia)
             .input('TenTacGia', sql.NVarChar, TenTacGia)
@@ -56,8 +59,9 @@ module.exports = {
     },
     delete: async (req, res) => {
         const { maTacGia } = req.params;
-        await poolConnect;
+        
         try {
+          const pool = await mssql.connect(config);
           const result = await pool.request()
             .input('MaTacGia', sql.NChar, MaTacGia)
             .query(`
