@@ -4,7 +4,10 @@ const {config} = require('../config/dbconfig');
 
 module.exports = {
     get: async (req, res) => {
-        let sql = 'SELECT * FROM Books';
+        let sql = `SELECT * FROM Sach 
+                    INNER JOIN TacGia ON Sach.MaTacGia = TacGia.MaTacGia
+                    INNER JOIN TheLoai ON Sach.MaTheLoai = TheLoai.MaTheLoai
+                    INNER JOIN NhaXuatBan ON Sach.MaNXB = NhaXuatBan.MaNXB`;
         try {
           const pool = await mssql.connect(config);
           const result = await pool.request().query(sql);
@@ -15,11 +18,14 @@ module.exports = {
         }
     },
     detail: async (req, res) => {
-        const { bookId } = req.params;
-        let sql = 'SELECT * FROM SACH WHERE BookId = @bookId';
+        let sql = `SELECT * FROM Sach 
+                    INNER JOIN TacGia ON Sach.MaTacGia = TacGia.MaTacGia
+                    INNER JOIN TheLoai ON Sach.MaTheLoai = TheLoai.MaTheLoai
+                    INNER JOIN NhaXuatBan ON Sach.MaNXB = NhaXuatBan.MaNXB
+                    WHERE MaSach = @MaSach`;
         try {
             const pool = await mssql.connect(config);
-            const result = await pool.request().query(sql);
+            const result = await pool.request().input('MaSach', mssql.VarChar, req.params.MaSach).query(sql);
             if (result.recordset.length > 0) {
             res.send(result.recordset[0]);
             } else {
