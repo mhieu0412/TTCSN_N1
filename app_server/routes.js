@@ -9,7 +9,7 @@ module.exports = function(app) {
     // Thêm một quyển sách vào db
         .post(sachCtrl.store);
 
-    app.route('/api/:MaSach')
+    app.route('/api/sach/:MaSach')
     // lấy thông tin một quyển sách trong db
         .get(sachCtrl.detail)
     // Sửa thông tin một quyển sách trong db
