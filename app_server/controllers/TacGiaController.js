@@ -42,10 +42,10 @@ module.exports = {
         try {
           const pool = await mssql.connect(config);
           const result = await pool.request()
-            .input('MaTacGia', sql.NChar, MaTacGia)
-            .input('TenTacGia', sql.NVarChar, TenTacGia)
-            .input('Website', sql.NVarChar, Website)
-            .input('GhiChu', sql.NVarChar, GhiChu)
+            .input('MaTacGia', mssql.NChar, MaTacGia)
+            .input('TenTacGia', mssql.NVarChar, TenTacGia)
+            .input('Website', mssql.NVarChar, Website)
+            .input('GhiChu', mssql.NVarChar, GhiChu)
             .query(`
               UPDATE TacGia
               SET TenTacGia = @TenTacGia, Website = @Website, GhiChu = @GhiChu
@@ -58,12 +58,12 @@ module.exports = {
         }
     },
     delete: async (req, res) => {
-        const { maTacGia } = req.params;
+        const { MaTacGia } = req.params;
         
         try {
           const pool = await mssql.connect(config);
           const result = await pool.request()
-            .input('MaTacGia', sql.NChar, MaTacGia)
+            .input('MaTacGia', mssql.NChar, MaTacGia)
             .query(`
               DELETE FROM TacGia
               WHERE MaTacGia = @MaTacGia

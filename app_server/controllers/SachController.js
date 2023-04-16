@@ -37,58 +37,76 @@ module.exports = {
         }
     },
     update: async (req, res) => {
-        let {TenSach, Website, GhiChu, NamXB, TenNXB, DiaChi, Email, NguoiDaiDien, TenTheLoai} = req.body;
-        let MaSach = req.params.MaSach;
-        let sql = `UPDATE TenSach, Website, GhiChu, NamXB, TenNXB, DiaChi, Email, NguoiDaiDien, TenTheLoai
-                    FROM Sach 
-                    INNER JOIN TacGia ON Sach.MaTacGia = TacGia.MaTacGia
-                    INNER JOIN TheLoai ON Sach.MaTheLoai = TheLoai.MaTheLoai
-                    INNER JOIN NhaXuatBan ON Sach.MaNXB = NhaXuatBan.MaNXB
-                    SET TenSach = @TenSach, Website = @Website, GhiChu = @GhiChu, NamXB = @NamXB,
-                    TenNXB = @TenNXB, DiaChi =@DiaChi, Email = @Email, NguoiDaiDien = @NguoiDaiDien, TenTheLoai = @TenTheLoai
-                    WHERE MaSach = @MaSach`
+        const MaSach = req.params.MaSach;
+        const { TenSach, MaTacGia, MaTheLoai, MaNXB, NamXB } = req.body;
+
         try {
-            const pool = await mssql.connect(config);
-            const result = await pool.request().query(sql);
-            if (result.rowsAffected[0] === 1) {
-                res.send(result);
+            let pool = await mssql.connect(config);
+
+            const result = await pool.request()
+                .input('MaSach', mssql.NChar(10), MaSach)
+                .input('TenSach', mssql.NVarChar(30), TenSach)
+                .input('MaTacGia', mssql.NChar(10), MaTacGia)
+                .input('MaTheLoai', mssql.NChar(10), MaTheLoai)
+                .input('MaNXB', mssql.NChar(10), MaNXB)
+                .input('NamXB', mssql.Int, NamXB)
+                .query(`UPDATE Sach 
+                SET TenSach = @TenSach, MaTacGia = @MaTacGia, 
+                MaTheLoai = @MaTheLoai, MaNXB = @MaNXB, NamXB = @NamXB 
+                WHERE MaSach = @MaSach`);
+
+            if (result.rowsAffected[0] === 0) {
+                // Record not found
+                res.sendStatus(404);
             } else {
-                res.status(404).send('Book not found');
+                // Record updated successfully
+                res.sendStatus(200);
             }
-        }
-        catch {
-            console.error(err);
-            res.status(500).send('Server error');
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
         }
     },
     store: async (req, res) => {
-        let {TenSach, Website, GhiChu, NamXB, TenNXB, DiaChi, Email, NguoiDaiDien, TenTheLoai} = req.body;
-        let sql = 'INSERT INTO Sach VALUES (@bookId, @bookName); SELECT SCOPE_IDENTITY() AS BookId';
-        try {
-            const pool = await mssql.connect(config);
-            const result = await pool.request().query(sql);
-            res.json({message: 'Insert success!'}, result);
-          } 
-        catch (err) {
-            console.error(err);
-            res.status(500).send('Server error');
-          }
+        const { MaSach, TenSach, MaTacGia, MaTheLoai, MaNXB, NamXB } = req.body;
+
+            try {
+                let pool = await mssql.connect(config);
+                const result = await pool.request()
+                    .input('MaSach', mssql.NChar(10), MaSach)
+                    .input('TenSach', mssql.NVarChar(30), TenSach)
+                    .input('MaTacGia', mssql.NChar(10), MaTacGia)
+                    .input('MaTheLoai', mssql.NChar(10), MaTheLoai)
+                    .input('MaNXB', mssql.NChar(10), MaNXB)
+                    .input('NamXB', mssql.Int, NamXB)
+                    .query(`INSERT INTO Sach (MaSach, TenSach, MaTacGia, MaTheLoai, MaNXB, NamXB) 
+                    VALUES (@MaSach, @TenSach, @MaTacGia, @MaTheLoai, @MaNXB, @NamXB)`);
+
+                res.status(201).json({ message: 'Sach created successfully' });
+            } catch (error) {
+                console.error(error);
+                res.sendStatus(500);
+        }
     },
     delete: async (req, res) => {
-        const { bookId } = req.body;
-        let sql = 'DELETE FROM Books WHERE BookId = @bookId';
+        const MaSach = req.params.MaSach;
         try {
-            const pool = await mssql.connect(config);
-            const result = await pool.request().query(sql);
-            if (result.rowsAffected[0] === 1) {
-              res.send('Book deleted');
+            let pool = await mssql.connect(config);
+
+            const result = await pool.request()
+                .input('MaSach', mssql.NChar(10), MaSach)
+                .query('DELETE FROM Sach WHERE MaSach = @MaSach');
+
+            if (result.rowsAffected[0] === 0) {
+                // Record not found
+                res.sendStatus(404);
             } else {
-              res.status(404).send('Book not found');
+                // Record deleted successfully
+                res.sendStatus(200);
             }
-        }
-        catch (err) {
-            console.error(err);
-            res.status(500).send('Server error');
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
         }
     },
     getCode: async (req, res) => {
