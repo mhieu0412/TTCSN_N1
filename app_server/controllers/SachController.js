@@ -108,5 +108,21 @@ module.exports = {
             console.error(error);
             res.sendStatus(500);
         }
+    },
+    getCode: async (req, res) => {
+        let sql = 'SELECT MAX(MaSach) From Sach'
+        try {
+            const pool = await mssql.connect(config);
+            const result = await pool.request().query(sql);
+            if (result.recordset.length > 0) {
+                res.send(result.recordset[0]);
+            } else {
+                res.status(404).send('DB has not data');
+            }
+          } 
+        catch (err) {
+            console.error(err);
+            res.status(500).send('Server error');
+          }
     }
 }

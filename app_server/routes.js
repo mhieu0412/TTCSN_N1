@@ -16,6 +16,8 @@ module.exports = function(app) {
         .put(sachCtrl.update)
     // Xóa một quyển sách trong db
         .delete(sachCtrl.delete);
+    app.route('/api/getcode')
+        .get(sachCtrl.getCode);
 
     app.route('/api/tacgia')
         .get(tacGiaCtrl.get)
