@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/app_ui/assets/css/form.css" />
+  <title>Document</title>
+</head>
+<body>
+  <div class="main">
+
+    <form action="" method="POST" class="form" id="form-1">
+      <h3 class="heading">Đăng ký</h3> 
+      <div class="spacer"></div>
+
+      <div class="form-group">
+        <label for="name" class="form-label">Tên đăng nhập</label>
+        <input id="name" name="name" type="text" placeholder="VD: viet2511" class="form-control">
+        <span class="form-message"></span>
+      </div>
+  
+      <div class="form-group">
+        <label for="password" class="form-label">Mật khẩu</label>
+        <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" class="form-control">
+        <span class="form-message"></span>
+      </div>
+  
+      <div class="form-group">
+        <label for="confirm-password" class="form-label">Nhập lại mật khẩu</label>
+        <input id="confirm-password" name="confirm-passwork" placeholder="Nhập lại mật khẩu" type="password" class="form-control">
+        <span class="form-message"></span>
+      </div>
+      <a href="login.html" style="float: left; font-size: 13px;">Đã có tài khoản</a>
+      <button class="form-submit">Đăng ký</button>
+    </form>
+  
+    
+  
+  </div>
+  <script src="/app_ui/js/form.js"></script>
+  <script>
+  form({
+    form: 'form-1',
+    test: [
+      testName('#name'),
+      testPassword('#password'),
+      testConfirmPassword('#confirm-password',function(){
+        return document.querySelector('#password').value
+      })
+    ],
+    message : "Đăng ký thành công",
+    erorrMessage : "Đăng ký không thành công"  
+  })
+  </script>
+</body>
+</html>
