@@ -1,7 +1,14 @@
 'use strict';
 module.exports = function(app) {
-    let sachCtrl = require('./controllers/SachController');
-    let tacGiaCtrl = require('./controllers/TacGiaController');
+    const sachCtrl = require('./controllers/SachController');
+    const tacGiaCtrl = require('./controllers/TacGiaController');
+    const userCtrl = require('./controllers/UserController');
+
+    app.route('/api/login')
+        .get(userCtrl.login)
+
+    app.route('/api/register')
+        .post(userCtrl.register)
     
     app.route('/api/sach')
     // Lấy ra tất cả sách trong db
