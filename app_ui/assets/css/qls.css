@@ -23,7 +23,21 @@ h1, h2, h3, h4, h5, h6 {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index:4 ;
+    z-index:100 ;
+}
+.menu-header{
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1.5;
+    background-color: #000;
+    color: white;
+    padding: 8px 16px;
+    float: left;
+    width: auto;
+    border: none;
+    display: none;
+    outline: 0;
+
 }
 .logo{
     padding: 8px 16px;
@@ -40,9 +54,10 @@ h1, h2, h3, h4, h5, h6 {
     height: 100%;
     background-color: #fff;
     position: fixed;
-    z-index: 1;
+    z-index: 100;
     overflow: auto;
     top: 43px;
+    display: block;
 }
 .container{
     margin-top: 18px;
@@ -196,4 +211,18 @@ td button{
 }
 .none{
     display: none;
+}
+
+
+@media only screen and (max-width: 992px){
+    #menu{
+        display: none;
+    }
+    #content{
+        margin-left: 0;
+    }
+    .menu-header{
+        display: block;
+    }
+   
 }
