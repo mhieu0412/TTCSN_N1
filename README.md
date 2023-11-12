@@ -1,6 +1,6 @@
 # **Giới thiệu**
 
--   Sản phẩm demo Website quản lý sách trong thư viện được thực hiện bởi Nhóm 4 Thực tập cơ sở ngành HAUI
+-   Sản phẩm demo Website quản lý sách trong thư viện được thực hiện bởi Nhóm 1 Thực tập cơ sở ngành HAUI
 
 # **Giao diện**
 
